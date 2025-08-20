@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block main %}
+
+<div class='container mt-4'>
+<form method="POST" class="container-fluid mt-4">
+  {% csrf_token %}
+  <div class="row g-2 align-items-end">
+
+    <div class="col-auto">
+      <label for="entry" class="form-label">Entry Number</label>
+      <input type="number" id="entry" name="entry" class="form-control" value="{{databy_id}}">
+    </div>
+
+    <div class="col-auto mt-4">
+      <button type="submit" class="btn btn-outline-secondary">
+        🔍 Search
+      </button>
+    </div>
+
+    <div class="col-auto">
+      <label for="unit" class="form-label">Production Unit</label>
+      <select id="unit" name="unit" class="form-select">
+        <option value="">Select Unit</option>
+        <option value="unit 1" {% if unit_filter == "unit 1" %}selected{% endif %}>Unit 1</option>
+        <option value='Unit 1' {% if unit_filter == "unit 1" %}selected{% endif %}>Unit 1</option>
+        <option value='Unit 2' {% if unit_filter == 'unit 2' %}selected{% endif %}>Unit 2</option>
+        <option value='Unit 3' {% if unit_filter == 'unit 3' %}selected{% endif %}>Unit 3</option>
+        <option value='Unit 4' {% if unit_filter == 'unit 4' %}selected{% endif %}>Unit 4</option>
+        <option value='Unit 5' {% if unit_filter == 'unit 5' %}selected{% endif %}>Unit 5</option>
+        
+      </select>
+    </div>
+
+    <div class="col-auto">
+      <label for="product" class="form-label">Product Name</label>
+      <input type="text" id="product-search" name="product" class="form-control" value='{{product_name_filter}}'>
+      <div id="suggestions" class="list-group position-absolute w-50" style="z-index:1000;"></div>
+    </div>
+
+    <div class="col-auto">
+      <label for="size" class="form-label">Product Size</label>
+      <select id="size" name="size" class="form-select">
+        <option value="">Select Size</option>
+        <option value='Small' {% if size_filter == 'Small' %}selected{% endif %}>Small</option>
+        <option value='Medium'{% if size_filter == 'Medium'%}selected{% endif %}>Medium</option>
+        <option value='Large' {% if size_filter == 'Large' %}selected{% endif %}>Large</option>
+      </select>
+    </div>
+
+    <div class="col-auto">
+      <label for="from" class="form-label">From</label>
+      <input type="date" id="from" name="from" class="form-control" value='{{start_date}}'>
+      
+    </div>
+
+    <div class="col-auto">
+      <label for="to" class="form-label">To</label>
+      <input type="date" id="to" name="to" class="form-control" value='{{End_date}}' >
+    </div>
+
+    <div class="col-auto mt-4">
+      <button type="submit" class="btn btn-outline-secondary">🔍 Search</button>
+    </div>
+
+    <div class="col-auto mt-4">
+      <a href="{% url 'export_production' %}?unit={{ unit_filter }}&size={{ size_filter }}&from={{ start_date }}&to={{ End_date }}&entry={{ databy_id }}" 
+       class="btn btn-outline-secondary">🔍 Export</a>
+    </div>
+
+    <div class="col-auto mt-4">
+      <a href="{% url 'Apde' %}" class="btn btn-primary">
+        ➕ Add New
+      </a>
+    
+    </div>
+    <div class="stats">
+    <span><strong>Total:</strong> {{ total_production }}</span>
+    <span><strong>Qualified:</strong> {{ total_qualified }}</span>
+    <span><strong>Wastage:</strong> {{ total_wastage }}</span>
+</div>
+    
+  </div>
+</form>
+</div>
+<hr style="border: none; height: 2px; background-color: #333;">
+<div class="container mt-4">
+  <table class="table table-bordered text-center align-middle">
+    <thead style="background-color: #2a9db2; color: white;">
+      <tr>
+        <th>Entry Date</th>
+        <th>Production Unit Name</th>
+        <th>Entry Number</th>
+        <th>Entry By</th>
+        <th>Product Name</th>
+        <th>Size</th>
+        <th>Production Qty (pcs)</th>
+        <th>Qualified Qty (pcs)</th>
+        <th>Wastage Qty (pcs)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in results %}
+            <tr>
+                <td>{{ item.Production_Entry_Date }}</td>
+                <td>{{ item.select_unit }}</td>
+                <td>{{ item.id }}</td>
+                <td>{{ item.Entry_by }}</td>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.product_size }}</td>
+                <td>{{ item.Total_Production }}</td>
+                <td>{{ item.Total_Qualified }}</td>
+                <td>{{ item.Total_Wastage }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9">No results found.</td>
+            </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById('product-search');
+    const suggestionBox = document.getElementById('suggestions');
+
+    if (!searchInput) return; 
+
+    searchInput.addEventListener('input', function() {
+        const query = this.value;
+        if(query.length > 0){
+            fetch(`/not-raw-autocomplete/?term=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                suggestionBox.innerHTML = '';
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.classList.add('list-group-item', 'list-group-item-action');
+                    div.textContent = item;
+
+                    
+                    div.addEventListener('click', () => {
+                        searchInput.value = item;
+                        suggestionBox.innerHTML = '';
+                    });
+
+                    suggestionBox.appendChild(div);
+                });
+            });
+        } else {
+            suggestionBox.innerHTML = '';
+        }
+    });
+});
+</script>
+<style>
+    .stats {
+        display: flex;
+        gap: 20px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+    .stats span {
+        font-weight: bold;
+    }
+    .stats strong {
+        font-weight: bold;
+    }
+</style>
+
+
+{% endblock  %}

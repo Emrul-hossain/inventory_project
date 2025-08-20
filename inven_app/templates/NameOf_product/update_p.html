@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded">
+        <h3 class="mb-4 text-center text-primary">Update Product</h3>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            <div class="row g-3">
+                {% for field in form %}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small">
+                                    {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <a href="{% url 'Product' %}" class="btn btn-secondary me-2">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-success">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

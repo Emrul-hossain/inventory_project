@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block main %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-4 rounded">
+        <h3 class="text-center text-primary mb-4">Add New Product</h3>
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+                <!-- Product Name -->
+                <div class="col-md-6">
+                    <label for="id_Product_Name" class="form-label">Product Name</label>
+                    <input type="text" name="Product_Name" class="form-control" id="id_Product_Name"
+                           placeholder="Enter product name" value="{{ form.Product_Name.value|default_if_none:'' }}">
+                    {% for error in form.Product_Name.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Type -->
+                <div class="col-md-6">
+                    <label for="id_Type_Name" class="form-label">Type</label>
+                    <input type="text" name="Type_Name" class="form-control" id="id_Type_Name"
+                           placeholder="Enter type" value="{{ form.Type_Name.value|default_if_none:'' }}">
+                    {% for error in form.Type_Name.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Size -->
+                <div class="col-md-4">
+                    <label for="id_Size" class="form-label">Size</label>
+                    <input type="number" name="Size" class="form-control" id="id_Size"
+                           placeholder="Enter size" value="{{ form.Size.value|default_if_none:'' }}">
+                    {% for error in form.Size.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Category -->
+                <div class="col-md-4">
+                    <label for="id_Category" class="form-label">Category</label>
+                    <select name="Category" class="form-select" id="id_Category">
+                        
+                        {% for choice in form.fields.Category.choices %}
+                            <option value="{{ choice.0 }}" {% if form.Category.value == choice.0 %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% for error in form.Category.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Color -->
+                <div class="col-md-4">
+                    <label for="id_Color_Name" class="form-label">Color</label>
+                    <input type="text" name="Color_Name" class="form-control" id="id_Color_Name"
+                           placeholder="Enter color name" value="{{ form.Color_Name.value|default_if_none:'' }}">
+                    {% for error in form.Color_Name.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pack Size -->
+                <div class="col-md-6">
+                    <label for="id_Pack_Size" class="form-label">Pack Size</label>
+                    <input type="number" name="Pack_Size" class="form-control" id="id_Pack_Size"
+                           placeholder="Enter pack size" value="{{ form.Pack_Size.value|default_if_none:'' }}">
+                    {% for error in form.Pack_Size.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Reorder Quantity -->
+                <div class="col-md-6">
+                    <label for="id_Reorder_Quantity" class="form-label">Reorder Quantity</label>
+                    <input type="number" name="Reorder_Quantity" class="form-control" id="id_Reorder_Quantity"
+                           placeholder="Enter reorder quantity" value="{{ form.Reorder_Quantity.value|default_if_none:'' }}">
+                    {% for error in form.Reorder_Quantity.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Sequence -->
+                <div class="col-md-6">
+                    <label for="id_Sequence" class="form-label">Sequence</label>
+                    <input type="number" name="Sequence" class="form-control" id="id_Sequence"
+                           placeholder="Enter sequence" value="{{ form.Sequence.value|default_if_none:'' }}">
+                    {% for error in form.Sequence.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Raw Material -->
+                <div class="col-md-6 d-flex align-items-center">
+                    <div class="form-check mt-3">
+                        <input type="checkbox" name="Is_Raw_Material" class="form-check-input" id="id_Is_Raw_Material"
+                               {% if form.Is_Raw_Material.value %}checked{% endif %}>
+                        <label class="form-check-label" for="id_Is_Raw_Material">Raw Material</label>
+                        {% for error in form.Is_Raw_Material.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-primary btn-lg">Add Product</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+
+

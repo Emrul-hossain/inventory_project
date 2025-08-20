@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block main %}
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+    <a href="{% url 'orga_add' %}" class="btn btn-primary">
+        ➕ Add New
+      </a>
+</div>
+<div class="mt-4">
+        <table class="table table-bordered text-center align-middle">
+            <thead style="background-color:#2a9db2; color:white;">
+                <tr>
+                    <th>Organization Name</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Contact Person</th>
+                    <th>Logo</th>
+                    <th>Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+               {%for i in Orga_data %}
+                <tr>
+                    <td>{{i.Organization_name}}</td>
+                    <td>{{i.adress}}</td>
+                    <td>{{i.Phone_Number}}</td>
+                    <td>{{i.email}}</td>
+                    <td>{{i.contact_person}}</td>
+                    <td>{% if i.Logo %}
+                    <img src="{{ i.Logo.url }}" alt="Logo" style="width:60px; height:auto; object-fit:contain;">
+                    {% else %}
+                      No Logo
+                    {% endif %}</td>
+                    <td></td>
+                </tr>
+               {% endfor %}    
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock  %}

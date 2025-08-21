@@ -222,7 +222,7 @@ def ProductionEntry(request):
     databy_id=request.POST.get('entry')
     # advanced search query
     unit_filter=request.POST.get("unit")
-    product_name_filter=request.GET.get("product")
+    product_name_filter=request.POST.get("product")
     size_filter=request.POST.get("size")
     start_date=request.POST.get("from")
     End_date=request.POST.get("to")
@@ -242,7 +242,8 @@ def ProductionEntry(request):
 
     # filter by name
     if product_name_filter:
-        results=results.filter(product_name=product_name_filter)
+        product_name_filter = product_name_filter.strip()
+        results=results.filter(product_name__iexact=product_name_filter)
     # Filter by size
     if size_filter:
         results=results.filter(product_size=size_filter)
